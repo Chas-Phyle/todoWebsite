@@ -1,0 +1,71 @@
+﻿@page "/tasks"
+@inject NavigationManager navManager
+@using DataLibrary
+@using todoWebsite.Models
+@using Microsoft.Extensions.Configuration
+@inject IDataAccess _data
+@inject IConfiguration _config
+
+
+<h3>People</h3>
+@if(task==null){
+    <p><em>Loading...</em></p>
+}
+else{
+
+    <EditForm Model="@taskModel" OnValidSubmit="@InsertTask">
+        <InputText id="task" @bind-Value="taskModel.task"/>
+        <button type="submit">Submit</button>
+    </EditForm>
+
+    @foreach(var p in task){
+        <p>
+            @if(p.completed!=1){
+           @p.idtasks @p.task @p.dateCreated.ToString("yyyy-MM-dd") @p.completed
+           <button class="btn btn-primary" @onclick="()=> TaskCompletion(p.idtasks)">Complete Task!!</button>
+            <button class="btn btn-primary" @onclick="()=> NotCompleted(p.idtasks)">Task not completed</button>}
+        </p>
+    }
+     
+}
+
+@code {
+    List<TaskModel> task;
+
+    private TaskModel taskModel = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        string sql = "select * from tasks";
+
+
+        task = await _data.LoadData<TaskModel,dynamic>(sql, new{}, _config.GetConnectionString("default"));
+    }
+    private async void TaskCompletion(int taskID) => await CompleteTask(taskID);
+    private async Task InsertTask(){
+        DateTime date = DateTime.Now;  
+        string sql = $"insert into tasks (task,dateCreated,completed) values (@task,@date,@complete)";
+
+        await _data.SavaData(sql, new { task = taskModel.task, date =  date.ToString("yyyy-MM-dd"), complete = 0 }, _config.GetConnectionString("default"));
+        navManager.NavigateTo("/tasks");
+
+    }
+    private async Task NotCompleted(int taskID){
+       
+        string sql = $"update tasks set completed = @completed where idtasks = @idtasks";
+        await _data.SavaData(sql, new { completed = 0, idtasks = taskID, }, _config.GetConnectionString("default"));
+        navManager.NavigateTo("/tasks");
+    }
+    private async Task CompleteTask(int taskID){
+
+        string sql = $"update tasks set completed = @completed where idtasks = @idtasks";
+        await _data.SavaData(sql, new { completed = 1, idtasks = taskID, }, _config.GetConnectionString("default"));
+        navManager.NavigateTo("/tasks");
+        
+
+    }
+
+    
+
+}
