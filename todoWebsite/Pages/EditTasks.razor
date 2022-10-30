@@ -1,14 +1,20 @@
-﻿@page "/"
+﻿@page "/editatask"
+
+<PageTitle>Edit a task</PageTitle>
+
 @inject NavigationManager navManager
 @using DataLibrary
 @using todoWebsite.Models
 @using Microsoft.Extensions.Configuration
+@inject IModalService modal
 @inject IDataAccess _data
 @inject IConfiguration _config
+@inject IJSRuntime JSRuntime
 
 
+<h1>Edit a Task</h1>
 
-    @if (task == null)
+ @if (task == null)
     {
     <p><em>Loading...</em></p>
     }
@@ -23,8 +29,7 @@
         @foreach (var p in task)
         {
             <p>
-                @if (p.completed != 1)
-                {
+               
                     <div class="flex-container">
                     <div class="task-number column">
                         <div class="circle-around-number">
@@ -32,23 +37,26 @@
                         </div>
                         </div>
                         <div class="column">
-                        <h5>Task description:</h5> @p.task
+                         Task description: @p.task
                         </div>
                         <div class="column">
-                        <h5> Date created:</h5>
-                        @p.dateCreated.ToString("yyyy-MM-dd")
+                        Date created: @p.dateCreated.ToString("yyyy-MM-dd")
                         </div>
                         <div class="">
-                        <button class="complete-button btn btn-primary " @onclick="()=> TaskCompletion(p.idtasks)">Complete Task!!</button>
+                        <button class="complete-button btn btn-primary " @onclick="()=> TaskCompletion(p.idtasks)">
+                            Complete Task!
+                        </button>
+                        <div class="complete-button btn btn-primary" @onclick="()=>EditTask(p.idtasks)">
+                            Delete Task!
+                        </div>
                     </div>
                     </div>
-                }
+                
             </p>
         }
 
     }
-        
-
+    
 
 
 
@@ -57,7 +65,7 @@
     List<TaskModel> task;
     bool everythingLoaded =false;
     private TaskModel taskModel = new();
-
+    private TaskModel popupTask = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -69,6 +77,24 @@
         everythingLoaded = true;
     }
     private async void TaskCompletion(int taskID) => await CompleteTask(taskID);
+
+
+    private async Task EditTask(int taskID)
+    {
+        foreach (var item in task)
+        {
+            if(item.idtasks == taskID){
+                popupTask = item;
+            }
+        }
+        DeleteTask();
+        navManager.NavigateTo("/");
+
+    }
+    private async void DeleteTask(){
+        string sql = $"DELETE from Tasks where idtasks = {popupTask.idtasks}";
+        await _data.SavaData(sql, new { }, _config.GetConnectionString("default"));
+    }
   
     private async Task NotCompleted(int taskID)
     {
@@ -86,7 +112,6 @@
 
 
     }
-
-
-
-}
+   
+    
+ }

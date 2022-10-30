@@ -1,0 +1,39 @@
+﻿@page "/addatask"
+@inject NavigationManager navManager
+@using DataLibrary
+@using todoWebsite.Models
+@using Microsoft.Extensions.Configuration
+@inject IDataAccess _data
+@inject IConfiguration _config
+
+
+<PageTitle>Add a Task</PageTitle>
+
+<h1>Add a task</h1>
+<div>
+<EditForm Model="@taskModel" OnValidSubmit="@InsertTask">
+       <InputText class="textarea" id="task" @bind-Value="taskModel.task" />
+    <button type="submit">Submit</button>
+</EditForm>
+</div>
+
+@code {
+    List<TaskModel> task;
+    bool everythingLoaded = false;
+    private TaskModel taskModel = new();
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+    private async Task InsertTask()
+    {
+        DateTime date = DateTime.Now;
+        string sql = $"insert into tasks (task,dateCreated,completed) values (@task,@date,@complete)";
+
+        await _data.SavaData(sql, new { task = taskModel.task, date = date.ToString("yyyy-MM-dd"), complete = 0 }, _config.GetConnectionString("default"));
+        navManager.NavigateTo("/");
+
+    }
+}

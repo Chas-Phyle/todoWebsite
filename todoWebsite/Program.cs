@@ -1,6 +1,5 @@
+using Blazored.Modal;
 using DataLibrary;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using todoWebsite.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +9,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<IDataAccess, DataAccess>();
+builder.Services.AddBlazoredModal();
 
 var app = builder.Build();
 

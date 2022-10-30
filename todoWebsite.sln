@@ -3,12 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todoWebsite", "todoWebsite\todoWebsite.csproj", "{E563E4D1-AB2F-4CF4-874B-7B7B2C277178}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todoWebsite", "todoWebsite\todoWebsite.csproj", "{E563E4D1-AB2F-4CF4-874B-7B7B2C277178}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7DA1A7F8-08FC-4276-8715-D6DF1F289EDF} = {7DA1A7F8-08FC-4276-8715-D6DF1F289EDF}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLibrary", "DataLibrary\DataLibrary.csproj", "{7DA1A7F8-08FC-4276-8715-D6DF1F289EDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLibrary", "DataLibrary\DataLibrary.csproj", "{7DA1A7F8-08FC-4276-8715-D6DF1F289EDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

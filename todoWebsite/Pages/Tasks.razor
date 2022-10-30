@@ -14,7 +14,7 @@
 else{
 
     <EditForm Model="@taskModel" OnValidSubmit="@InsertTask">
-        <InputText id="task" @bind-Value="taskModel.task"/>
+        <InputText style="width:100%" id="task" @bind-Value="taskModel.task"/>
         <button type="submit">Submit</button>
     </EditForm>
 
