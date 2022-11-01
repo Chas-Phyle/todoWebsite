@@ -1,11 +1,14 @@
 ﻿@page "/addatask"
 @inject NavigationManager navManager
+@using Dapper
 @using DataLibrary
+@using System.Data
+@using MySql.Data.MySqlClient
 @using todoWebsite.Models
 @using Microsoft.Extensions.Configuration
-@inject IDataAccess _data
-@inject IConfiguration _config
-
+@*@inject IDataAccess _data*@
+@*@inject IConfiguration _config
+*@
 
 <PageTitle>Add a Task</PageTitle>
 
@@ -19,6 +22,8 @@
 
 @code {
     List<TaskModel> task;
+    [Parameter]
+    public string DefaultString { get; set; } = "This was a test string";
     bool everythingLoaded = false;
     private TaskModel taskModel = new();
     private int currentCount = 0;
@@ -32,8 +37,24 @@
         DateTime date = DateTime.Now;
         string sql = $"insert into tasks (task,dateCreated,completed) values (@task,@date,@complete)";
 
-        await _data.SavaData(sql, new { task = taskModel.task, date = date.ToString("yyyy-MM-dd"), complete = 0 }, _config.GetConnectionString("default"));
+        //await _data.SavaData(sql, new { task = taskModel.task, date = date.ToString("yyyy-MM-dd"), complete = 0 }, _config.GetConnectionString("default"));
+        if(taskModel.task is null){
+            taskModel.task = DefaultString;
+        }
+       
+        await SavaData(sql, new { task = taskModel.task, date = date.ToString("yyyy-MM-dd"), complete = 0 }, "Server=127.0.0.1;database=todolist;uid=root;pwd=Cp8520123789");
         navManager.NavigateTo("/");
 
     }
+    public Task SavaData<T>(string sql, T? parameters, string connectionString)
+    {
+      
+        
+
+        using (IDbConnection conn = new MySqlConnection(connectionString))
+        {
+            return conn.ExecuteAsync(sql, parameters);
+        }
+    }
+  
 }
