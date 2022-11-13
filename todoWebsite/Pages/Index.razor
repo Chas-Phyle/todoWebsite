@@ -15,6 +15,7 @@
         <input type="text" placeholder="Search Tasks"
                aria-lable="Search box" class="form-control rounded-control"
                @oninput="((txt)=> OnSearchInput((string)txt.Value))" />
+        
     </div>
     
     <div>
@@ -24,41 +25,43 @@
     <p><em>Loading...</em></p>
     }
     else if( task == null && everythingLoaded ==true){
-        <h1>All your tasks are complete!</h1>
-    }
-    else
-    {
-        <h1>All your tasks!</h1>
-
-
-        @foreach (var p in searchTasks)
-        {
-            <p>
-                @if (p.completed != 1)
-                {
-                    <div class="flex-container">
-                    <div class="task-number column">
-                        <div class="circle-around-number">
-                           @p.idtasks
-                        </div>
-                        </div>
-                        <div class="column">
-                        <h5>Task description:</h5> @p.task
-                        </div>
-                        <div class="column">
-                        <h5> Date created:</h5>
-                        @p.dateCreated.ToString("yyyy-MM-dd")
-                        </div>
-                        <div class="">
-                        <button class="complete-button btn btn-primary " @onclick="()=> TaskCompletion(p.idtasks)">Complete Task!!</button>
-                    </div>
-                    </div>
-                }
-            </p>
+            <h1>All your tasks are complete!</h1>
         }
+        else
+        {
+            {<h1>All your tasks!</h1>
+                @foreach (var p in searchTasks)
+                {
+                    <p>
+                        @if (p.completed != 1)
+                        {
+                            <div class="flex-container">
+                                <div class="task-number column">
+                                    <div class="circle-around-number">
+                                        @p.idtasks
+                                    </div>
+                                </div>
+                                <div class="column">
+                                    <h5>Task description:</h5> @p.task
+                                </div>
+                                <div class="column">
+                                    <h5> Date created:</h5>
+                                    @p.dateCreated.ToString("yyyy-MM-dd")
+                                </div>
+                                <div class="">
+                                    <button class="complete-button btn btn-primary " @onclick="()=> TaskCompletion(p.idtasks)">Complete Task!!</button>
+                                </div>
+                            </div>
+                        }
+                    </p>
+                   
 
-    }
-    </div>
+
+                }
+        }
+       }
+     </div>
+       
 </div>
 
 
@@ -67,16 +70,18 @@
 @code {
     List<TaskModel> task;
     List<TaskModel> searchTasks;
+
     bool everythingLoaded =false;
     private TaskModel taskModel = new();
     private string searchText = "";
-
+    bool searchInputReady = false;
     protected override async Task OnInitializedAsync()
     {
         string sql = "select * from tasks";
 
-
+        System.Console.WriteLine("this is a test");
         task = await _data.LoadData<TaskModel, dynamic>(sql, new { }, _config.GetConnectionString("default"));
+        searchTasks = task;
         searchTasks = await _data.LoadData<TaskModel, dynamic>(sql, new { }, _config.GetConnectionString("default"));
         everythingLoaded = true;
     }
@@ -98,19 +103,23 @@
 
 
     }
-    private async Task OnSearchInput(string searchInput)
+    private async Task OnSearchInput(string userInput)
     {
-        searchText = searchInput;
+        searchText = userInput;
         await FilterOptions();
     }
 
+    //update so that the case does not matter
+
     private async Task FilterOptions()
     {
-        searchTasks = task;
+        searchTasks = task; 
         var output = searchTasks;
-
+        var userInput = searchText;
         List<TaskModel> temp = new();
 
+
+        
         if (string.IsNullOrWhiteSpace(searchText) == false)
         {
             List<int> taskIds = new();
@@ -140,10 +149,11 @@
         }
         if (string.IsNullOrWhiteSpace(searchText))
         {
-            searchTasks = task;
+           searchTasks = task;
         }
-
-        await SaveFilterState();
+        searchInputReady = true;
+        
+         await SaveFilterState();
     }
     private async Task SaveFilterState()
     {
