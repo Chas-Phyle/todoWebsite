@@ -10,7 +10,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todoWebsite", "todoWebsite\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLibrary", "DataLibrary\DataLibrary.csproj", "{7DA1A7F8-08FC-4276-8715-D6DF1F289EDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todoWebsite.Tests", "todoWebsite.Tests\todoWebsite.Tests.csproj", "{20A58C57-5826-4221-80CE-54E51B34D0CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todoWebsite.Tests", "todoWebsite.Tests\todoWebsite.Tests.csproj", "{20A58C57-5826-4221-80CE-54E51B34D0CD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{7DA1A7F8-08FC-4276-8715-D6DF1F289EDF} = {7DA1A7F8-08FC-4276-8715-D6DF1F289EDF}
 		{E563E4D1-AB2F-4CF4-874B-7B7B2C277178} = {E563E4D1-AB2F-4CF4-874B-7B7B2C277178}
